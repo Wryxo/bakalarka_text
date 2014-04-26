@@ -1,0 +1,4 @@
+\chapter{Implementácia}
+
+\paragraph{}
+V doterajšej verzií aplikácie sú implementované metódy na vytváranie štandardizovaných balíčkov a ich nainštalovanie. Po stupstení aplikácia vytvorí kópiu registrov a čaká na asynchrónne události ohľadom zmeny v súborovom systéme. Na toto sme použili triedu FileSystemWatcher. Pri události sa spustí funkcia, ktorá podľa typu (vytvorenie, premenovanie, vymazanie, zmena obsahu) upraví súbor so zoznamom. Po skončení inštalácie, a zastavení aplikácie sa vytvorí druhá kópia registrov, a ich rozdiel sa zapíše, na zistenie rozdiel dvoch súborov používame algortimus na nájdenie najdlhšej spoločnej podpostupnosti. Takisto všetky súbory, ktoré kvôli niektorej události boli zapísane do zoznamu sa nakopíruju do zložky balíku, zachovavajúc hierarchiu zložiek. Na operácie so súbormi sme použili metódy tried File a Folder.

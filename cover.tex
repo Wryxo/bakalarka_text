@@ -1,0 +1,37 @@
+\newcommand{\coverTop}{
+    \begin{center}
+        {\textbf \Large \textsc {\settingsSchool \\ \settingsFaculty}}
+        \vfill
+        {\LARGE \em \settingsTitle} \\ {\large Bakalárska práca}
+    \end{center}
+}
+
+\newcommand{\coverCenter}{
+    \begin{tabular}{l l}
+        \textbf{Študijný program:} & \settingsProgramme \\
+        \textbf{Študijný odbor:} & \settingsField \\
+        \textbf{Školiace pracovisko:} & \settingsDepartment \\
+        \textbf{Vedúci práce:} &  \settingsAdvisor
+    \end{tabular}
+}
+
+\newcommand{\coverBottom}{
+    \begin{center}
+        \textbf{\settingsYear \hfill \settingsAuthor}
+    \end{center}
+}
+
+\thispagestyle{empty}
+\coverTop
+\vfill
+\coverBottom
+\newpage
+
+\thispagestyle{empty}
+\coverTop
+\vfill
+\coverCenter
+\vfill
+\coverBottom
+\newpage
+

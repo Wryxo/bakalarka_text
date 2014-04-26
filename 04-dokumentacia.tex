@@ -1,0 +1,21 @@
+\chapter{Dokumentácia}
+
+\paragraph{}
+Aj keď to nevie veľa toho, to málo sa dá robiť takto.
+
+\section{Vytvorenie balíku}
+\paragraph{}
+Po spustení aplikácie, napíšeme názov balíku (predvolené tam je Testing) vyberieme disk C a/alebo D (zatiaľ tam je podpora len pevne na tieto 2 disky) a stlačíme Start Listen. Nainštalujeme program (rozbalíme .zip a pripíšeme niečo do registrov), na obrazovke sa nám bude zobrazovať zoznam súborov, ktoré aplikácia detekovala. Po skončení inštalácie, stlačíme Stop Listen, program si prekopíruje všetky súbory do zložky Packages pri aplikácii.
+
+\section{Nainštalovanie balíku}
+\paragraph{}
+Po spustení aplikácie v spodnej časti si vybereme názov balíku, ktorý chceme nainštalovať a klikneme Install. Aplikácia následne nakopíruje všetky odložené súbory na miesto, odkiaľ boli zaznamenané a do registrov pridá zmeny, ktoré nastali počas inštalácie.
+
+\section{Dočasné nedostatky}
+\paragraph{}
+Keďže aplikácie je stále vo vývoji, treba si dať pozor na následovné veci:
+\begin{itemize}
+\item Na disku C, aplikácia zachytáva aj systemové a dočasné súbory, ktoré neskôr možu spôsobiť výnimku.
+\item Pri inštalácii prepisuje súbory
+\item Je tam ďalšie obrovské množstvo vecí, ktoré môžu vyvolať výnimky
+\end{itemize}
