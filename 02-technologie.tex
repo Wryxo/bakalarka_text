@@ -4,6 +4,6 @@
 \paragraph{}
 Jazyk C\# sme zvolili kvôli podpore .NET frameworku. Ten nám poskytuje mnohé funkcie na ovládanie Windowsového file systému a registrov. Monitorovanie inštalačného programu by sa dalo robiť viacerými spôsobmi. Prvý najpriamejší by bol, spraviť zoznam súborov pred inštaláciou, po inštalácii a vyrobiť si rozdiel týchto zoznamov. Tento prístup je avšak veľmi zdĺhavý. Ďalšie asi najidealnejšie riešenie čo sa týka efektivity by bolo obaliť inštaláciu našou aplikáciou a všetky príkazy, ktoré inštalácie posiela systému odchytiť a zapísať si. Pri tomto spôsobe by sa nám do výsledkov nedostali ani súbory zmenené operačným systémom, ktoré nesúvisia s danou inštaláciou. Podobné riešenie, relatívne ľahko dosiahnuteľné v .NET, odchytáva asynchronné události pri zmene v súborovom systéme alebo registrov, a vie na tieto události reagovať, toto riešenie avšak odchytáva aj súbory zmenené ostatnými processmi a to nie je vždy to čo chceme.
 
-\section{SFTP}
+\section{HTTPS}
 \paragraph{}
-Na prenos dát medzi serverom, kde budú uložené balíčky, a cieľovým počítačom budeme používať protokol Secure File Transfer Protocol, ktorý je rozšírením často používaného Secure Shell (SSH) protokolu.
+Na prenos dát medzi užívateľmi a serverom budeme používať technológiu Secure Sockets Layer (SSL) zakomponovanú v protokole HTTPS. 
