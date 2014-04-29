@@ -2,13 +2,44 @@
 
 \section{Zmeny súborového systému}
 \paragraph{}
-Základom našej aplikácie je .NET trieda FileSystemWatcher, ktorú na začiatku inicializujeme a nastavíme na počúvanie události na všetkých pevných diskoch počítaču. Táto trieda generuje události na ktoré reaguje zvyšok programu, existujú dve kategórie událostí na ktoré treba reagovať. Zmena súboru, ktorá zahrňuje vytvorenie, zmenu a zmazanie súboru a premenovanie súboru, ktoré sa uskotoční iba pri zmene názvu súboru. Táto trieda spĺňa takmer všetky naše požiadávky, avšak nevie rozpoznať, ktorý proces stojí za vytvorením daného súboru, čo spôsobuje problém, že môžu byť odchytené události zmien v súboroch od iných procesov ako je daná inštalácia, bežne totiž v operačnom systéme beží mnoho programov na pozadí, ktoré si vytvárajú a upravujú súbory.
+Základom našej aplikácie je .NET trieda FileSystemWatcher, ktorú na začiatku inicializujeme a nastavíme na počúvanie události na všetkých pevných diskoch počítaču, ukážka kódu v kóde \ref{lst:init}. Táto trieda generuje události na ktoré reaguje zvyšok programu, existujú dve kategórie událostí na ktoré treba reagovať. Zmena súboru, ktorá zahrňuje vytvorenie, zmenu a zmazanie súboru. Druhá kategória je premenovanie súboru, ktoré sa uskotoční iba pri zmene názvu súboru. Trieda FileSystemWatcher spĺňa takmer všetky naše požiadávky, avšak nevie rozpoznať, ktorý proces stojí za vytvorením daného súboru, čo spôsobuje problém, že môžu byť odchytené události zmien v súboroch od iných procesov ako je naša sledovaná inštalácia, bežne totiž v operačnom systéme beží mnoho programov na pozadí, ktoré si vytvárajú a upravujú súbory. 
 
 \paragraph{Zmena súboru}
-Pri tomto type událostí najprv zistíme, ktorá z troch vecí nastala. Pri vytvorení súboru si zapíšeme miesto kde bol tento súbor vytvorený do zoznamu súborov tohto balíku. Túto informáciu využijeme neskôr pri koprírovaní súborov do balíku a inštalácií balíku. Ak bola táto událosť zavolaná pri zmene súboru, skontrolujeme či už tento súbor v tomto balíku monitorujeme, ak nie tak si ho zapíšeme do zoznamu akoby bol novo vytvorený aby sme odzalohovali zmeny, ktoré v ňom nastali. Nakoniec ak táto událosť nastala pri zmazaní súboru, zistíme jeho výskyt v doterajšom zozname súborov a prípadne ho vymažeme aby sme sa neskôr vyhli chybe pri kopírovaní neexistujúceho súboru. Pri všetkých událostiach ignorujeme súbory, ktoré sme my vytvorili - zoznam súborov balíku, diferencie registrov.
+Pri tomto type událostí najprv zistíme, ktorá z troch vecí nastala. Pri vytvorení súboru si zapíšeme miesto kde bol tento súbor vytvorený do zoznamu súborov tohto balíku. Túto informáciu využijeme neskôr pri koprírovaní súborov do balíku a inštalácií balíku. Ak bola táto událosť zavolaná pri zmene súboru, skontrolujeme či už tento súbor v tomto balíku monitorujeme, ak nie tak si ho zapíšeme do zoznamu akoby bol novo vytvorený aby sme odzalohovali zmeny, ktoré v ňom nastali. Nakoniec ak táto událosť nastala pri zmazaní súboru, zistíme jeho výskyt v doterajšom zozname súborov a prípadne ho vymažeme aby sme sa neskôr vyhli chybe pri kopírovaní neexistujúceho súboru. Zoznam doteraz monitorovaných súborov si pamätáme v hašovacej mape, keďže nám poskytuje rýchle riešenie vyhľadávania a kontroly prítomnosti prvku v poli.
 
 \paragraph{Premenovanie súboru}
-Pri tomto type události prejdeme náš doterajši zoznam nájdeme pôvodný názov a zmeníme ho na nový. Týmto sa opäť vyhneme problémom s neexistujúcimi súbormi.
+Pri tomto type události prejdeme náš doterajši zoznam nájdeme pôvodný názov a vymažeme ho, zároveň pridáme do zoznamu nový záznam s novým menom súboru. Tento zložitý postup je zapričinený použitím hašovacej mapy, ktorej hašovacia funkcia dostane ako vstup cestu k súboru a preto haš pre starý a nový názov sú odlišné.
+
+\begin{listing}
+\begin{minted}[mathescape,
+               linenos,
+               numbersep=5pt,
+               frame=lines,
+               framesep=2mm]{csharp}
+DriveInfo[] allDrives = DriveInfo.GetDrives();
+foreach (DriveInfo d in allDrives)
+{
+    if (d.DriveType == DriveType.Fixed) 
+    { 
+        FileSystemWatcher watcher = new FileSystemWatcher();
+        watcher.Path = d.Name;
+        watcher.IncludeSubdirectories = true;
+        watcher.NotifyFilter = NotifyFilters.LastWrite
+           | NotifyFilters.FileName | NotifyFilters.DirectoryName;
+
+        watcher.Changed += new FileSystemEventHandler(OnChanged);
+        watcher.Created += new FileSystemEventHandler(OnChanged);
+        watcher.Deleted += new FileSystemEventHandler(OnChanged);
+        watcher.Renamed += new RenamedEventHandler(OnRenamed);
+
+        watcher.EnableRaisingEvents = true;
+        watchers.Add(watcher);
+    }
+}         
+\end{minted}
+\caption{Inicializácia}
+\label{lst:init}
+\end{listing}
 
 \section{Rozdiel registrov}
 \paragraph{}
