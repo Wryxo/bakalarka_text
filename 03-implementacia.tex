@@ -14,7 +14,7 @@ Pri tomto type události prejdeme náš doterajši zoznam nájdeme pôvodný ná
 \begin{minted}[mathescape,
                linenos,
                numbersep=5pt,
-               frame=lines,
+               frame=block,
                framesep=2mm]{csharp}
 DriveInfo[] allDrives = DriveInfo.GetDrives();
 foreach (DriveInfo d in allDrives)
@@ -44,3 +44,21 @@ foreach (DriveInfo d in allDrives)
 \section{Rozdiel registrov}
 \paragraph{}
 K hodnotám registrov, ktoré program vytvoril alebo zmenil sa dostaneme pomocou vytvorenia rozdielu pôvodných registrov a registrov po nainštalovaní programu. K tomuto použijeme algoritmus na nájdenie najdlhšej spoločnej sekvencie, tento algoritmus nebudeme implementovať ale použijeme implementáciu **referencia**. Tento kus kódu dostane na vstup 2 textové súbory a vráti nám riadky v ktorých sa odlišujú. Ako vstup mu teda dodáme výpisy registrov v štandardnom formáte vytvorené pomocou program regedit. Ako výstup dostane výpis nových kľúčov a ich hodnôt vo formáte, ktorý program regedit dokáže prečítať a vytvoriť dané kľúče v registroch. Problém avšak vzniká ak inštalácia zmení hodnotu už vytvoreného kľúča, pretože algoritmus rozpozná zmenu len na riadku priamo s novom hodnotou a nie definíciou kľúča, ktorá bude vtedy identická s tou pred inštaláciou. Tento problém budeme musieť neskôr odstrániť, zatiaľ ho však odignorujeme, vzhľadom na to, že podľa prieskumu nie mnoho programov upravuje počas inštalácie predtým vytvorené registre.
+
+\section{Inštalácia balíčkov}
+\paragraph{}
+
+Na každej podstanici bude bežať druhá časť našej aplikácie, ktorá ma za úlohu nastaviť potrebné cesty do registrov, udržovať aktuálny zoznam balíčkov zo serveru a nainštalovať alebo spustiť vyžiadaný balíček. Vrámci inštalácia, aplikácia prejde cez zoznam súborov, ktoré daný balíček obsahuje a skontroluje či existujú na miestách kde majú, ak zistí že neexistuje tak ho tam nakopíruje z balíku. Táto časť aplikácia bere pri spustení 0, 1 alebo 2 parametre. Všetky odkazy vytvorené našou aplikáciou budú smerovať na tento spustiteľný súbor a budú mať aplikáciou nastavené potrebné parametre k spusteniu.
+
+\subsection{0 parametrov}
+Pri spustení aplikácie bez parametrov, aplikácia skontroluje Windows Registry a zistí, či obsahujú všetky potrebné údaje pre aplikáciu (cesty k dôležitým zložkám) a následne stiahne zo serveru najnovší zoznam balíčkov a podľa neho vytvorí potrebné odkazy. Odkazy vytvorí na jednom z dvoch miest.
+\begin{itemize}
+\item Balíčky, ktoré sa spustia pri spustení systému, odkazy budú umiestnené do windows zložky Po spustení
+\item Balíčky, ktoré sa spustia na vyžiadanie uživateľa, odkazy budú umiestnené do zložky zapísanej v registroch
+\end{itemize}
+
+\subsection{1 parameter}
+Ak do aplikácia zadáme len jeden parameter, tento parameter musí byť názov existujúceho balíčku, ktorý aplikácia stiahne zo server a nainštaluje.
+
+\subsection{2 parametre}
+Pri dvoch parametroch aplikácia dostane prvý parameter názov balíčku, ktorý ma nainštalovať a ako druhý parameter očakáva cestu k súboru, ktorý ma spustiť po dokončení inštalácie.
