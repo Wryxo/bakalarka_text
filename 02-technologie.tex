@@ -1,9 +1,7 @@
 \chapter{Technológie}
 
 \section{C\#}
-\paragraph{}
-Jazyk C\# sme zvolili kvôli podpore .NET frameworku. Ten nám poskytuje mnohé funkcie na ovládanie Windowsového file systému a registrov. Monitorovanie inštalačného programu by sa dalo robiť viacerými spôsobmi. Prvý najpriamejší by bol, spraviť zoznam súborov pred inštaláciou, po inštalácii a vyrobiť si rozdiel týchto zoznamov. Tento prístup je avšak veľmi zdĺhavý. Ďalšie asi najidealnejšie riešenie čo sa týka efektivity by bolo obaliť inštaláciu našou aplikáciou a všetky príkazy, ktoré inštalácie posiela systému odchytiť a zapísať si. Pri tomto spôsobe by sa nám do výsledkov nedostali ani súbory zmenené operačným systémom, ktoré nesúvisia s danou inštaláciou. Podobné riešenie, relatívne ľahko dosiahnuteľné v .NET, odchytáva asynchronné události pri zmene v súborovom systéme alebo registrov, a vie na tieto události reagovať, toto riešenie avšak odchytáva aj súbory zmenené ostatnými processmi a to nie je vždy to čo chceme.
+Jazyk C\# sme zvolili kvôli podpore .NET frameworku. Ten nám poskytuje funckie na narábanie s mnohými časťami operačného systému Windows. Programy napísané v tomto frameworku v aplikačnom virtuálnom stroji, ktorý sa stará o bezpečnosť, správu pamäte a odchytávania výnimiek. Vďaka nemu budeme schopný odchytiť a zreplikovať inštalácie na staniciach, poskytuje nám triedy na prácu so súbormi, zložkami a registrami operačného systému.
 
 \section{HTTPS}
-\paragraph{}
 Na prenos dát medzi užívateľmi a serverom budeme používať technológiu Secure Sockets Layer (SSL) zakomponovanú v protokole HTTPS. 

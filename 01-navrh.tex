@@ -2,14 +2,12 @@
 
 \section{Zadefinovanie Problému}
 
-\paragraph{}
-V dnešnej dobe, najdôležitejším nástrojom  zamestnanca vo firme aby bol produktívny je počítač. Avšak aj napriek tomuto faktu mnoho z týchto zamestnancov počítačom nerozumie a vyžadujú pomoc firemného administrátora pri inštalácii počítaču alebo niektorých programov. Táto úloha je síce z pohľadu informatika triviálna, avšak zaberá obrovské množstvo času vzhľadom na jej obťažnosť. Administrátor dokáže stráviť niekoľko dní nad prípravou novokúpených  počítačov, pred tým ako ich odovzdá zamestnancom. Toto je spôsobené hlavne veľkým množstvom ovládačov programov bez ktorých je počítač takmer nepoužiteľný. 
-Problém, ktorému sa v tejto práci budeme venovať a výsledný program ho má čo najefektívnejšie riešiť, je ako presunúť čo najviac práce s prípravou počítaču do funkčného stavu presunúť z administrátora na užívateľa s tým, že od užívateľa nebudeme vyžadovať žiadne nové znalosti, ani mu nebudeme musieť prideľovať vyššie prístupové práva.
+V dnešnej dobe najdôležitejším nástrojom produktívného zamestnanca vo firme je počítač. Avšak aj napriek tomuto faktu mnoho z týchto zamestnancov počítačom nerozumie a vyžadujú pomoc firemného administrátora pri inštalácii počítaču alebo niektorých programov. Táto úloha je síce z pohľadu informatika triviálna, avšak zaberá obrovské množstvo času vzhľadom na jej obťažnosť. Administrátor dokáže stráviť niekoľko dní nad prípravou novokúpených  počítačov, pred tým ako ich odovzdá zamestnancom. Toto je spôsobené hlavne veľkým množstvom ovládačov programov bez ktorých je počítač takmer nepoužiteľný. 
+Problém, ktorému sa v tejto práci budeme venovať a výsledný program ho má čo najefektívnejšie riešiť, je ako presunúť čo najviac práce s prípravou počítaču do funkčného stavu z administrátora na užívateľa s tým, že od užívateľa nebudeme vyžadovať žiadne nové znalosti, ani mu nebudeme musieť prideľovať vyššie prístupové práva.
 
 \section{Návrh riešenia}
 
-\paragraph{}
-Bohužiaľ inštalácie na operačnom systéme Windows nie sú homogénne. Veľa výrobcov softvéru si programuje svoje vlastné inštalačné programy a preto výroba aplikácie, ktoré by vedela automatický obslúžiť akúkoľvek inštaláciu, by bola takmer nemožná. Preto v rámci riešenia problému si budeme generovať vlastné inštalácie, ktoré budú mať spoločnú predlohu a vďaka tejto vlastnosti budeme môcť vyrobiť aplikáciu, ktorá tieto inštalácie bez zásahu užívateľa.  Toto riešenie vyrobí balíčky, ktoré následne presunie na cieľovú stanicu, kde sa rozbalia a tým nainštalujú želaný program. Celý tento proces môže byť pre používateľa neviditeľný.  Implementáciu a finálnu aplikáciu vieme rozdeliť na tieto časti:
+Bohužiaľ inštalácie na operačnom systéme Windows nie sú homogénne. Veľa výrobcov softvéru si programuje svoje vlastné inštalačné programy a preto výroba aplikácie, ktoré by vedela automatický obslúžiť akúkoľvek inštaláciu, by bola takmer nemožná. Preto v rámci riešenia problému si budeme generovať vlastné inštalácie, ktoré budú mať spoločnú predlohu a vďaka tejto vlastnosti budeme môcť vyrobiť aplikáciu, ktorá tieto inštalácie bez zásahu užívateľa nainštaluje.  Toto riešenie vyrobí balíčky, ktoré následne presunie na cieľovú stanicu, kde sa rozbalia a tým nainštalujú želaný program. Celý tento proces môže byť pre používateľa neviditeľný.  Implementáciu a finálnu aplikáciu vieme rozdeliť na tieto časti:
 
 \begin{itemize}
 \item Odchytenie a uloženie priebehu inštalácie do balíčku
@@ -24,11 +22,11 @@ Priamočiary prístup k tomuto problému pozostáva z vyrobenia zoznamu súborov
 \paragraph{Pomocou obalenia inštalácie}
 Ďalším možným riešením zisťovania zmien, ktoré inštalácia vykonala, je vytvorenie aplikácie, ktorá obalí inštalačný program a bude reagovať na jeho volania operačnému systému na vytvorenie alebo zmenu súborov. Tento prístup je v ohľade na rýchlosť vykonávania nesmierne rýchly, avšak nie dokonalý. Pri implementácií by sme museli filtrovať volania operácií na dočasných súboroch, ktoré si inštalácia môže vytvárať počas svojho behu. Implementácia tohto prístupu by bola viazaná na konkrétny proces inštalácie a museli by sme ošetrovať špeciálne prípady, kedy inštalácia používa pomocné procesy, ktorých volania by nemuseli byť odchytené pôvodnou aplikáciou. 
 \paragraph{Odchytením zmien na súborovom systéme}
-Posledné riešenie, ktoré spomenieme a ktoré budeme neskôr implementovať, je pomocou štandardných knižníc .NET frameworku pre systémy Windows. V týchto knižniciach nájdeme mnoho nástrojov, ktoré nám pomôžu narábať so súborovým systémom. V tomto konkrétnom prípade použijeme triedu FileSystemWatcher, ktorá čaká na udalosti zo súborového systému a posiela ich ďalej do programu. Týmto spôsobom sa vyhneme vytváraniu kompletného zoznamu súborov na disku a zároveň zistíme zmeny v systéme vytvorené akýmkoľvek procesom v danom čase. S týmto prichádza aj mnoho negatív, ako zachytávanie udalostí od samotného operačného systému alebo programov bežiacich na pozadí nesúvisiacich s inštaláciou. Doteraz sme riešili ako zachytiť zmenu v súborovom systéme, avšak dôležitou súčasťou mnohých programov sú aj Windows registre. Spomínaný .NET framework obsahuje triedy na počúvanie udalostí v registroch, avšak tieto triedy neobsahujú dostatok informácií kde a aká zmena v registroch nastala aby sme ich mohli použiť. Preto pri zisťovaní zmien v registroch použijeme ich základne funkcie a to výpis podstromu  registrov do súboru a načítanie podstromu registrov zo súboru. Zmeny, ktoré vznikli počas inštalácie získame z rozdielu výpisov registrov pred a po inštalácií. Zistením zoznamu súborov a registrov, ktoré sa vyrobili alebo zmenili počas inštalácie dostaneme balíček, ktorý obsahuje všetky potrebné veci pre fungovanie daného programu.
+Posledné riešenie, ktoré spomenieme a ktoré budeme implementovať, je pomocou štandardných knižníc .NET frameworku pre systémy Windows. V týchto knižniciach nájdeme mnoho nástrojov, ktoré nám pomôžu narábať so súborovým systémom. V tomto konkrétnom prípade použijeme triedu FileSystemWatcher, ktorá čaká na udalosti zo súborového systému a posiela ich ďalej do programu. Týmto spôsobom sa vyhneme vytváraniu kompletného zoznamu súborov na disku a zároveň zistíme zmeny v systéme vytvorené akýmkoľvek procesom v danom čase. S týmto prichádza aj mnoho negatív, ako zachytávanie udalostí od samotného operačného systému alebo programov bežiacich na pozadí nesúvisiacich s inštaláciou. Doteraz sme riešili ako zachytiť zmenu v súborovom systéme, avšak dôležitou súčasťou mnohých programov sú aj Windows registre. Spomínaný .NET framework obsahuje triedy na počúvanie udalostí v registroch, avšak tieto triedy neobsahujú dostatok informácií kde a aká zmena v registroch nastala aby sme ich mohli použiť. Preto pri zisťovaní zmien v registroch použijeme ich základne funkcie a to výpis podstromu  registrov do súboru a načítanie podstromu registrov zo súboru. Zmeny, ktoré vznikli počas inštalácie získame z rozdielu výpisov registrov pred a po inštalácií. Zistením zoznamu súborov a registrov, ktoré sa vyrobili alebo zmenili počas inštalácie dostaneme balíček, ktorý obsahuje všetky potrebné veci pre fungovanie daného programu.
 
 \subsection{Inštalácia balíčkov}
 
-Po tom ako pripravíme balíčky vyššie uvedeným spôsobom, treba spraviť inštaláciu programov z daných balíčkov. Balíčky majú nami zadefinovanú štruktúru ktorá obsahuje nasledovné informácie:
+Po tom ako pripravíme balíčky vyššie uvedeným spôsobom, treba spraviť inštaláciu programov z daných balíčkov. Balíčky majú nami zadefinovanú štruktúru, ktorá obsahuje nasledovné informácie:
 
 \begin{itemize}
 \item Súbory programu
@@ -37,27 +35,14 @@ Po tom ako pripravíme balíčky vyššie uvedeným spôsobom, treba spraviť in
 \item Balíčky, ktoré treba mať nainštalované
 \end{itemize}
 
-Okrem týchto si v zozname všetkých balíčkov budeme pamätať zoznam spustiteľných súborov na ktoré sa ma vytvoriť odkaz a nastavenie typu inštalácie pri štarte systému alebo na vyžiadanie. Úlohou tejto časti aplikácie bude rozbaliť súbory z balíčka na miesto, ktoré bolo určené pri inštalácii, načítanie hodnôt registrov podľa výpisu v balíčku a vytvorenie odkazu na spustiteľné súbory, ktoré by užívateľa mohli zaujímať.
+Toto sú všetky informácie, ktoré sú potrebné na replikáciu inštalácie na iné stanice. Okrem týchto si v zozname všetkých balíčkov budeme pamätať zoznam spustiteľných súborov na ktoré sa ma vytvoriť odkaz a nastavenie typu inštalácie pri štarte systému alebo na vyžiadanie. Úlohou tejto časti aplikácie bude rozbaliť súbory z balíčka na miesto, ktoré bolo určené pri inštalácii, načítanie hodnôt registrov podľa výpisu v balíčku a vytvorenie odkazu na spustiteľné súbory, ktoré by užívateľa mohli zaujímať.
 
 \subsection{Prenos balíčkov}
 
-Ako posledné budeme v implementácií riešiť prenášanie balíčkov na cieľové stanice. Vychádzať budeme z predpokladu, že naša aplikácia bude používaná v prostredí obsahujúcom sieťové spojenie medzi stanicami a stanicu na ktorej sa budú skladovať všetky dostupné balíčky, pre potreby tejto práce ju budeme nazývať server. Úlohou aplikácie po vytvorení balíčku na vzorovom počítači bude poslať tento balíček na server a zapísať ho do zoznamu dostupných balíčkov. Prenos dát a komunikácia medzi serverom a ostatnými stanicami bude prebiehať pomocou SSL technológie.
+Ako posledné budeme v implementácií riešiť prenášanie balíčkov na cieľové stanice. Vychádzať budeme z predpokladu, že naša aplikácia bude používaná v prostredí obsahujúcom sieťové spojenie medzi stanicami a stanicu na ktorej sa budú skladovať všetky dostupné balíčky, pre potreby tejto práce ju budeme nazývať server. Užívateľská aplikácia vždy zo serveru stiahne zoznam balíčkov s odkazmi, ktoré ma pripraviť pre užívateľa, a neskôr pri inštalácií bude zo serveru sťahovať súbory inštalovaného balíku. Čo sa týka obnovovania zoznamu balíkov na servery, bude administrátorovou povinnosťou presunúť súbor so zoznamom na server.
 
-\section{Fungovanie aplikácie}
+\subsection{Sériové kľúče}
+Väčšina programov vyžaduje kúpenú licenciu, ktorá sa bežne kontroluje pomocou sériového kľúča. Tento kľúč sa zadáva pri inštalácií alebo prvom spustení. Ak sa zadáva pri prvom spustení, našu aplikáciu to neovplyvní, len administrátor bude zodpovedný za spustenie programu na každej stanici a zadaniu kľúča. Ak sa kľúč zadáva pri inštalácií naša aplikácia okopíruje program s jedným kľúčom na všetky stanice kam bude program nainštalovaný pomocou balíčka. Keďže v dnešnej dobe čím ďalej tým viac firiem poskytuje možnosť hromadného nákupu licencií, ktorým prislúcha len jeden sériový kľúč, sme sa rozhodli tento problém a jeho riešenie nechať na administrátorovi, ktorý bude musieť zariadiť aby boli dodržané všetky licenčné podmienky, ktoré sa týkajú kľúča.
 
-Aplikácia bude mať dve spustiteľné zložky, administrátorskú a užívateľskú. Zatiaľ čo administrátorská časť bude obyčajná Windows aplikácia, ktorú bude treba manuálne spustiť, užívateľská bude reagovať na špeciálne vytvorené odkazy aplikácií
-\paragraph{Administrátor}
-Po spustení tejto časti aplikácie, bude administrátor prezentovaný aplikáciou obsahujúcou ovládanie na úpravu všetkých nastavení ako napríklad adresa serveru, adresa kam treba vyrábať odkazy na programy a podobne. Ďalej sa tu bude nachádzať ovládanie časti na vytváranie balíčkov, spustenie/vypnutie zachytávania zmien v súborovom systéme a chybový výpis. Zmena niektorých nastavení alebo odchytávanie procesu bude vyžadovať administrátorské heslo.
-\paragraph{Užívateľ}
-Odkazy vytvorené našou aplikáciou, budú smerovať k tejto časti aplikácie, ktorá skontroluje či už daný program existuje a rozhodne, či treba spustiť balíček na inštaláciu alebo samotný program.
-Konfigurácia
-
-Všetky nastavenia, ktoré aplikácia potrebuje budú uložené vo Windows registroch, pri prvom spustení si aplikácia všetky tieto nastavenia vypýta, neskôr budú meniteľné len pomocou regedit. Tieto nastavenia zahŕňajú:
-
-\begin{itemize}
-\item Cesta k aplikácii
-\item Cesta k balíčkom
-\item Cesta k odkazom na programy
-\item Adresa serveru
-\end{itemize}
-
+\subsection{Užívateľské nastavenia}
+Mnoho programov si v dnešnej dobe zapisuje nastavenia do užívateľskej zložky umiestnenej na systémovom disku - C:\textbackslashUsers\textbackslash\textless meno užívateľa\textgreater\textbackslash. Táto zložka sa samozrejme mení podľa užívateľa a preto treba aj pri inštalácií balíčka na toto myslieť a nainštalovať ho do užívateľskej zložky práve prihlaseného užívateľa. Toto vyriešíme jednoducho keď pri zapisovaní cesty skontroľujeme či neukazuje do uživateľskej zložky a nahradíme ju našou značkou, ktorú neskôr nahradíme práve prihlaseným užívateľom.

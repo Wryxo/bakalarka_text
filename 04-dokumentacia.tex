@@ -1,21 +1,27 @@
 \chapter{Dokumentácia}
 
-\paragraph{}
-Aj keď to nevie veľa toho, to málo sa dá robiť takto.
+\section{Inštalácia}
+\subsection{Prerekvizity}
+Aplikácia vyžaduje aby na každej podstanici bol nainštalovaný .NET framework verzia 4.0, v ktorom je aplikácia vyvíjaná. Táto verzia frameworku je automatický nainštalovaná v operačnom systéme Windows 7 alebo Windows 8. Ďalej aplikácia potrebuje aby stanica bola na spoločnej sieti so serverom, z ktorého bude sťahovať balíky. Tento server musí mať zložku s balíkmi prístupnu cez HTTP protokol a zároveň mať nainštalovaný SSL certifikát, ktorým sa bude identifikovať užívateľovi pri požiadavke na stiahnutie balíku.
+\subsection{Aplikácia}
+Zdrojovy kód aplikácie je dostupný na stránke https://github.com/Wryxo/bakalarka. Avšak je doporučené stiahnuť si inštalačný program zo stránky <TODO>, ktorý nainštaluje všetky potrebné súbory našej aplikácie a spustí prvotnú konfiguráciu. Takisto vytvorí odkaz po spustení, ktorý stiahne zo serveru obnovený zoznam balíkov.
 
-\section{Vytvorenie balíku}
-\paragraph{}
-Po spustení aplikácie, napíšeme názov balíku (predvolené tam je Testing) vyberieme disk C a/alebo D (zatiaľ tam je podpora len pevne na tieto 2 disky) a stlačíme Start Listen. Nainštalujeme program (rozbalíme .zip a pripíšeme niečo do registrov), na obrazovke sa nám bude zobrazovať zoznam súborov, ktoré aplikácia detekovala. Po skončení inštalácie, stlačíme Stop Listen, program si prekopíruje všetky súbory do zložky Packages pri aplikácii.
+\section{Konfigurácia}
+Po skončení inštalácie sa spustí aplikácia, ktorá si vypýta cesty k zložkám potrebným pre správne fungovanie a adresu súborov na servery. Po konfigurácií sa aplikácia pokúsi stiahnuť zoznam balíčkov zo serveru, ktorý administrátor zadal.
 
-\section{Nainštalovanie balíku}
-\paragraph{}
-Po spustení aplikácie v spodnej časti si vybereme názov balíku, ktorý chceme nainštalovať a klikneme Install. Aplikácia následne nakopíruje všetky odložené súbory na miesto, odkiaľ boli zaznamenané a do registrov pridá zmeny, ktoré nastali počas inštalácie.
-
-\section{Dočasné nedostatky}
-\paragraph{}
-Keďže aplikácie je stále vo vývoji, treba si dať pozor na následovné veci:
+\section{Spúšťanie}
+V inštalašnej zložke programu sa nachádzajú 2 spustiteľné súbory:
 \begin{itemize}
-\item Na disku C, aplikácia zachytáva aj systemové a dočasné súbory, ktoré neskôr možu spôsobiť výnimku.
-\item Pri inštalácii prepisuje súbory
-\item Je tam ďalšie obrovské množstvo vecí, ktoré môžu vyvolať výnimky
+\item setitup-admin.exe - slúži pre administrátora na vytváranie balíkov. Vyžaduje administrátorské práva na spustenie, kvôli sledovaniu události na súborom systéme
+\item setitup.exe - aplikácia, ktorá sa spúšťa keď užívateľ použije odkaz vytvorený našou aplikáciou. Aplikácia nainštaluje potrebný balík alebo spustí program vyžiadaný od užívateľa
 \end{itemize}
+
+\section{Správa balíkov}
+\subsection{Vytvorenie balíku}
+Po spustení administrátorskej aplikácie, sa zobrazí rozhranie v ktorom administrátor dokáže spustiť sledovanie inštalácie a kontrolovať v konzole priebeh sledovania a chybové správy. Po skončení sledovania bude prezentovaný formulárom na výber odkazov, ktoré majú byť dostupné užívateľovi, výberom balíkov na ktorých je práve vytváraný balík závislý a zvolením kedy má byť balík inštalovaný.
+
+\subsection{Zoznam balíkov}
+Zoznam balíkov je zapísaný v súbore na servery alebo v zložke s balíkmi. Administrátor môže manuálne meniť nastavenia balíkov, zmenou textových súborov v zložke s balíkmi. V týchto konfiguračných súbroch je zapísany zoznam balíkov, odkazov, ktoré sa majú vytvoriť a dokonca aj zoznam súborov určitého balíku.
+
+\subsection{Inštalácia balíku}
+Užívateľ môže nainštalovať balík spustením odkazu zo zložky s odkazmi. Tento odkaz zistí, či už je daný balík nainštalovaný a podľa toho sa rozhodne o ďalšom kroku. Ak balík ešte nebol nainštalovaný aplikácia stiahne potrebné súbory zo serveru a nakopíruje ich na potrebné miesto. V prípade, že balík bol nainštalovaný aplikácia spustí požadovaný program. Toto celé sa vykoná bez vedomia užívateľa.

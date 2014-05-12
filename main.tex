@@ -75,6 +75,9 @@
 \makeoddfoot{plainright}{}{}{\thepage}
 \aliaspagestyle{chapter}{plainright}
 
+\setsecnumdepth{subsection}
+\maxtocdepth{subsection}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Macros
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -107,9 +110,10 @@
     
     \tableofcontents*
     \newpage
-    \listoffigures*
+    \listoflistings*
     \newpage
-    \listoftables*
+    \listoffigures*
+    %\listoftables*
     
 \mainmatter
     \input{contents}
