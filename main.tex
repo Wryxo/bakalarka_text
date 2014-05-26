@@ -50,6 +50,17 @@
 \usepackage[chapter]{minted}
 \usemintedstyle{tango}
 \renewcommand\listingscaption{Zdrojový kód}
+\renewcommand\listoflistingscaption{Zoznam listingov}
+
+% Klikanie na kapitoly
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Bibliography
@@ -98,7 +109,7 @@
 \frontmatter
     \input{cover}
 
-    %\includepdf[pages=1]{\settingsAISfile}
+    \includepdf[pages=1]{\settingsAISfile}
     \newpage
     
     \thispagestyle{plain}
@@ -110,7 +121,7 @@
     
     \tableofcontents*
     \newpage
-    \listoflistings*
+    \listoflistings
     \newpage
     \listoffigures*
     %\listoftables*
