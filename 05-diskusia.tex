@@ -1,0 +1,42 @@
+\chapter{Diskusia}
+
+\section{Možné zlepšenia v budúcnosti}
+\label{sec:zlepsenia}
+\paragraph{Automatizácia procesu nahrávania súborov na server}
+Po vytvorení balíku je potrebné aby administrátor nahral daný balík a súbor packages.txt na server. Tento proces by sa dal taktiež automatizovať, avšak vyžadoval by aplikáciu na strane serveru, ktorá by požiadavky na nahranie balíku spracovávala.
+
+\paragraph{Aktualizácie}
+Pridať balíkom informáciu o ich aktuálnej verzií. Následne pri každom spustení sa skontroluje lokálna verzia balíka s verziou na serveri, v prípade nezhody by sa stiahla verzia zo serveru a nainštalovala sa. Takisto by bolo treba do administrátorského programu pridať možnosť aktualizovať určitý balík, čím by aplikácia automaticky zvýšila hodnotu verzie balíku.
+
+\paragraph{Odinštalovanie}
+Vytvoriť algoritmus, ktorý nájde všetky súbory a registre spojené s daným balíkom a odstráni ich, takisto upozorní používateľa o možných chybách v programoch závislých od daného balíčku.
+
+\paragraph{Sériové kódy}
+Pridať do administrátorskej aplikácie nástroje na manažovanie sériových kódov. Administrátor by vedel k balíku pridať množinu sériových kódov, ktoré by program manažoval a každej stanici, ktorá by si balík inštalovala poslal jeden kľúč z množiny nepoužitých. Týmto by sa vyriešila otázka licencií. Toto riešenie by avšak vyžadovalo zistenie umiestnenia kľúča po inštalácii a jeho zmenu podľa potreby.
+
+\paragraph{Lokalizácia}
+Zatiaľ všetky výpisy a názvy v aplikácií sú napísané v slovenčine. Do budúcnosti by sa dalo všetky napevno zadefinované reťazce prepísať do konštánt, ktoré by umožnili jednoduchú úpravu do jazyka podľa vyžiadania. V jazyku C\# na to slúžia zdroje, sú to súbory s koncovkou .resx v ktorých sú uložené konštanty ku ktorým sa dá pristupovať z ostatných častí programu. Do názvu týchto súborov sa pridáva aj skratka jazyku ku ktorému patria (sk, en, fr), pomocou ktorej program rozlišuje, ktoré reťazce sa použijú.
+
+\paragraph{Ikony programov}
+V aktuálnej verzií aplikácie, všetky nami vytvorené odkazy majú ikonu preddefinovanú systémom Windows. Jeden z problémov pri implementácii tejto vlastnosti je nájdenie cesty k pôvodnej ikone programu a odkopírovanie tejto ikony spolu s programom. 
+
+\paragraph{Použitie MSI balíkov}
+Tak ako bolo spomenuté v sekcií \ref{sec:categories} MSI balíky majú mnoho vlastností, ktoré by sa dali použiť v našej aplikácii. Preto v budúcnosti by sme mohli vytvárať balíky typu MSI vďaka čomu namiesto funkcií, ktoré sme implementovali my, budeme používať funkcie implementované spoločnosťou Microsoft. 
+
+\section{Experiment}
+\label{sec:experiment}
+V rámci finalizácie aplikácie sme sa rozhodli otestovať aplikáciu na vzorke programov, ktoré sú bežnou súčasťou školského počítača. Inštalovali sme následovné programy:
+\begin{itemize}
+\item Google Chrome
+\item Mozilla Firefox
+\item Opera
+\item Microsoft Office 2010
+\item OpenOffice 4
+\item Gimp
+\item Blender
+\item Eclipse
+\end{itemize}
+\paragraph{}
+Balíčky sme vytvárali na stanici s operačným systémom Windows 8.1 a inštalovali sme ich na stanicu s operačným systémom Windows 7. Oba počítače boli pred experimentom plne funkčné a niektoré vyššie spomenuté programy na nich boli odinštalované až pred začatím experimentu. Táto skutočnosť mohla ovplyvniť výsledky experimentu, v podobe registrov a súborov, ktoré dané programy zanechali po odinštalovaní. Podarilo sa nám úspešne vytvoriť inštalačné balíky pre všetky programy okrem Microsoft Office 2010. Pri tomto programe sa zapisovanie balíku zasekáva pri vytváraní rozdielu registrov, príčina chyby sa nám nepodarila odhaliť ani po niekoľkých pokusoch ladenia programu. Okrem tohto problému nám táto časť experimentu ukázala zopár chýb v aplikácie, ktoré sme okamžite odstránili. Takisto sme zistili, že ani jeden z týchto programov nezapisuje žiadne dôležité súbory do zložky s používateľskými nastaveniami.
+\paragraph{}
+Vytvorené inštalácie sme preniesli na druhú stanicu, kde sme spustili lokálny server. Služba našej aplikácie korektne vytvorila všetky požadované odkazy na balíky. Pri inštalovaní sa opäť vyskytlo zopár chýb, ktoré sme okamžite ošetrili, ako spúšťanie programu regedit so zlým parametrom a zle zadaná cesta na rozbalenie archívu s balíčkom (o stupeň hlbšie). Na koniec sa nám podarilo úspešne nainštalovať všetky vyššie spomenuté programy okrem webového prehliadaču Google Chrome. Ten po inštalácií hlási pri spustení chybu s textom \textit{The application has failed to start because its side-by-side configuration is incorrect}. Pokúšali sme sa túto chybu najskôr manuálne odstrániť, avšak ani po dôkladnejšom hľadaní na internete sme nenašli funkčné riešenie. Mnohé fóre doporučovali nainštalovanie balíkov \textbf{Microsoft Visual C++ 200X Redistributable}, avšak žiaden z nich náš problém nevyriešil. V zhrnutí nám experiment pomohlo nájsť mnoho malých chýb, ktoré mohli spôsobiť nefunkčnosť aplikácie v praxi. Zároveň nás tento experiment priviedol na mnoho vylepšení ako je exportovanie registrov po jednotlivých kľúčoch aby sme znížili časovú náročnosť diferenčného algoritmu.

@@ -2,7 +2,7 @@
 
 \section{Štruktúra aplikácie}
 
-Aplikácia bude mať tri zložky. Administrátorskú časť zodpovednú za vytváranie balíkov, používateľskú zodpovednú za rozhodovanie či treba balík nainštalovať alebo spustiť výsledný program a nakoniec službu, ktorá sa bude starať o inštalovanie súborov a registrov z balíčkov na požiadavku od užívateľskej aplikácie.
+Aplikácia bude mať tri zložky. Administrátorskú časť zodpovednú za vytváranie balíkov, používateľskú časť zodpovednú za rozhodovanie, či treba balík nainštalovať alebo spustiť výsledný program a nakoniec službu, ktorá sa bude starať o inštalovanie súborov a registrov z balíčkov na požiadavku od užívateľskej aplikácie.
 \subsection{Administrátor}
 Po spustení tejto časti aplikácie, bude mať administrátor možnosť spustiť sledovanie zachytávania zmien. Takisto bude mať prístup k informačnému výpisu, v ktorom sú informácie o jednotlivých zachytených súboroch a prípadných chybách. Po ukončení sledovania, bude mať administrátor možnosť vybrať odkazy, ktoré sa majú vytvoriť, balíky na ktorých je daný balík závislý a typ inštalácie.
 \subsection{Používateľ}
@@ -20,25 +20,25 @@ Všetky nastavenia, ktoré aplikácia potrebuje budú uložené vo Windows regis
 
 \subsection{Zmeny súborového systému}
 \label{subsec:fsw}
-Základom našej aplikácie je .NET trieda FileSystemWatcher, ktorú na začiatku inicializujeme a nastavíme na počúvanie udalosti na všetkých pevných diskoch počítaču. Táto trieda generuje udalosti na ktoré reaguje zvyšok programu, existujú dve kategórie udalostí na ktoré treba reagovať. Zmena súboru, ktorá zahrňuje vytvorenie, zmenu a zmazanie súboru. Druhá kategória sa stará o premenovanie súboru, ktoré sa uskutoční iba pri zmene názvu súboru. 
+Základom našej aplikácie je .NET trieda FileSystemWatcher, ktorú na začiatku inicializujeme a nastavíme na počúvanie udalosti na všetkých pevných diskoch počítača. Táto trieda generuje udalosti na ktoré reaguje zvyšok programu. Existujú dve kategórie udalostí na ktoré treba reagovať. Prvá kategória zahrňuje vytvorenie, zmenu a zmazanie súboru. Druhá kategória sa stará o premenovanie súboru, ktoré sa uskutoční iba pri zmene názvu súboru. 
 
 \subsubsection{Zmena súboru}
-Pri tomto type udalostí najprv zistíme, ktorá z troch vecí nastala. Pri vytvorení súboru si zapíšeme miesto, kde bol tento súbor vytvorený, do zoznamu súborov tohto balíku. Túto informáciu využijeme neskôr pri kopírovaní súborov do balíku a inštalácií balíku. Ak bola táto udalosť volaná pri zmene súboru, skontrolujeme či už tento súbor v tomto balíku monitorujeme, ak nie tak si ho zapíšeme do zoznamu akoby bol novo vytvorený aby sme zálohovali zmeny, ktoré v ňom nastali. Nakoniec ak táto udalosť nastala pri zmazaní súboru, zistíme jeho výskyt v doterajšom zozname súborov a prípadne ho vymažeme aby sme sa neskôr vyhli chybe pri kopírovaní neexistujúceho súboru. Zoznam súborov, ktoré doteraz monitorujeme, si pamätáme v hašovacej mape, keďže nám poskytuje rýchle riešenie vyhľadávania a kontroly prítomnosti prvku v poli.
+Pri tomto type udalostí najprv zistíme, ktorá z troch vecí prvej kategórie nastala. Pri vytvorení súboru si zapíšeme miesto, kde bol tento súbor vytvorený, do zoznamu súborov tohto balíku. Túto informáciu využijeme neskôr pri kopírovaní súborov do balíku a inštalácií balíku. Ak bola táto udalosť volaná pri zmene súboru, skontrolujeme či už tento súbor v tomto balíku monitorujeme. Ak nie tak si ho zapíšeme do zoznamu akoby bol novo vytvorený aby sme zálohovali zmeny, ktoré v ňom nastali. Nakoniec ak táto udalosť nastala pri zmazaní súboru, zistíme jeho výskyt v doterajšom zozname súborov a prípadne ho vymažeme aby sme sa neskôr vyhli chybe pri kopírovaní neexistujúceho súboru. Zoznam súborov, ktoré doteraz monitorujeme, si pamätáme v hašovacej mape, keďže nám poskytuje rýchle riešenie vyhľadávania a kontroly prítomnosti prvku v poli.
 
 \subsubsection{Premenovanie súboru}
 Pri tomto type udalosti prejdeme náš doterajší zoznam nájdeme pôvodný názov a vymažeme ho, zároveň pridáme do zoznamu nový záznam s novým menom súboru. Tento zložitý postup je zapríčinený použitím hašovacej mapy, ktorej hašovacia funkcia dostane ako vstup cestu k súboru a preto heš pre starý a nový názov sú odlišné.
 
 \subsection{Rozdiel registrov}
-K hodnotám registrov, ktoré program vytvoril alebo zmenil sa dostaneme pomocou vytvorenia rozdielu pôvodných registrov a registrov po nainštalovaní programu. K tomuto použijeme algoritmus na nájdenie najdlhšej spoločnej sekvencie, tento algoritmus nebudeme implementovať ale použijeme časti voľne šíriteľného programu, ktorý vypíše používateľovi rozdiely medzi dvomi textovými súbormi. V našej aplikácií dodáme tomuto programu na vstup výpisy registrov v štandardnom formáte Windows vytvorené pomocou programu regedit. Ako výstup dostaneme kľúče registrov, ktoré pribudli od poslednej inštalácie. Pri generovaní výsledného zoznamu registrov pred každú zmenenú hodnotu napíšeme kľúč do ktorého patrí. Táto redundancia nám ošetrí problém zmeny hodnoty bez vytvorenia kľúča.
+K hodnotám registrov, ktoré program vytvoril alebo zmenil sa dostaneme pomocou vytvorenia rozdielu pôvodných registrov a registrov po nainštalovaní programu. K tomuto použijeme algoritmus na nájdenie najdlhšej spoločnej sekvencie, tento algoritmus nebudeme implementovať ale použijeme časti voľne šíriteľného programu, ktorý vypíše používateľovi rozdiely medzi dvomi textovými súbormi. V našej aplikácií dodáme tomuto programu na vstup výpisy registrov v štandardnom formáte Windows vytvorené pomocou programu regedit. Ako výstup dostaneme kľúče registrov, ktoré pribudli od poslednej inštalácie. Keďže tento algoritmus nefunguje efektívne, rozhodli sme sa registre exportovať po jednotlivých kľúčoch prvé stupňa. Týmto kompletné porovnanie registrov pozostáva z veľa porovnaní na malých súboroch. Pri generovaní výsledného zoznamu registrov pred každú zmenenú hodnotu napíšeme kľúč do ktorého patrí. Táto redundancia nám ošetrí problém zmeny hodnoty bez vytvorenia kľúča.
 
 \subsection{Inštalácia balíčkov}
-Na každej stanici bude po štarte systému spustená naša služba, ktorá ma za úlohu skontrolovať potrebné cesty v registroch, udržovať aktuálny zoznam balíčkov zo serveru a nainštalovať vyžiadaný balíček. V rámci inštalácie, aplikácia prejde cez zoznam súborov, ktoré daný balíček obsahuje a skontroluje či existujú na miestách kde majú. Ak zistí že niektorý súbor chýba tak ho nakopíruje z balíku na jeho miesto v systéme. Táto časť aplikácia berie pri spustení 0, 1 alebo 2 parametre. Odkazy vytvorené našou aplikáciou spustia spustiteľný súbor UserApp.exe s potrebnými parametrami.
+Na každej stanici bude po štarte systému spustená naša služba, ktorá ma za úlohu skontrolovať potrebné cesty v registroch, udržovať aktuálny zoznam balíčkov zo serveru a nainštalovať vyžiadaný balíček. V rámci inštalácie, aplikácia prejde cez zoznam súborov, ktoré daný balíček obsahuje a skontroluje, či existujú na miestach kde majú. Ak zistí že niektorý súbor chýba, tak ho nakopíruje z balíku na jeho miesto v systéme. Táto časť aplikácia berie pri spustení 0, 1 alebo 2 parametre. Odkazy vytvorené našou aplikáciou spustia spustiteľný súbor UserApp.exe s potrebnými parametrami.
 
 \subsubsection{0 parametrov}
-Pri spustení aplikácie bez parametrov, aplikácia skontroluje Windows Registry a zistí, či obsahujú všetky potrebné údaje pre aplikáciu (cesty k dôležitým zložkám).
+Pri spustení aplikácie bez parametrov, aplikácia skontroluje Windows registre a zistí, či obsahujú všetky potrebné údaje pre aplikáciu (cesty k dôležitým zložkám).
 
 \subsubsection{1 parameter}
-Ak do aplikácie zadáme len jeden parameter, tento parameter musí byť názov existujúceho balíčku, ktorý aplikácia pošle požiadavku službe, ktorá sa rozhodne či treba daný balíček nainštalovať
+Ak do aplikácie zadáme len jeden parameter, tento parameter musí byť názov existujúceho balíčku, ktorý aplikácia pošle ako požiadavku službe, ktorá sa rozhodne či treba daný balíček nainštalovať
 
 \subsubsection{2 parametre}
 Pri dvoch parametroch aplikácia dostane prvý parameter názov balíčku, ktorý ma nainštalovať a ako druhý parameter očakáva cestu k súboru, ktorý ma spustiť po dokončení inštalácie.
@@ -114,7 +114,7 @@ foreach (DriveInfo d in allDrives)
 \end{listing}
 
 \subsection{Kontrola registrov}
-Pri spustení používateľskej aplikácie bez parametrov sa vykoná kontrola registrov, ktoré sú potrebné na inštalovanie balíkov. Ak daný kľúč neexistuje tak sa spýtame používateľa alebo zapíšeme tam potrebnú hodnotu (ako v prípade zložky kde je program nainštalovaný)
+Pri spustení používateľskej aplikácie bez parametrov sa vykoná kontrola registrov, ktoré sú potrebné na inštalovanie balíkov. Ak daný kľúč neexistuje tak sa naňho spýtame používateľa alebo zapíšeme tam potrebnú hodnotu (ako v prípade zložky kde je program nainštalovaný)
 
 \begin{listing}
 \begin{minted}[mathescape,
@@ -138,7 +138,7 @@ if (installDir == "Not Exist")
 \end{listing}
 
 \subsection{Tvorba odkazov}
-Po kontrole registrov sa zo serveru stiahne zoznam dostupných balíčkov a vytvoria sa potrebné odkazy. Odkazu nastavíme cestu k spustiteľnému súboru našej aplikácie a ako argumenty pošleme názov balíku, ktorý ma nainštalovať a cestu k spustiteľnému súboru, ktorý sa má pustiť ak už je balík nainštalovaný
+Po kontrole registrov sa zo serveru stiahne zoznam dostupných balíčkov a vytvoria sa potrebné odkazy. Každému odkazu nastavíme cestu k spustiteľnému súboru našej aplikácie a ako argumenty pošleme názov balíku, ktorý sa má nainštalovať a cestu k spustiteľnému súboru, ktorý sa má pustiť ak už je balík nainštalovaný.
 
 \begin{listing}
 \begin{minted}[mathescape,
@@ -160,7 +160,7 @@ shortcut.Save();
 \end{listing}
 
 \subsection{Logovanie chýb služby}
-Vrámci inicializácie služby, ktorá má za úlohu inštalovať balíky, nastavíme tejto službe zapisovanie udalostí do Windows logu, kde ich v prípade potreby môže administrátor nájsť.
+V rámci inicializácie služby, ktorá má za úlohu inštalovať balíky, nastavíme tejto službe zapisovanie udalostí do Windows logu, kde ich v prípade potreby môže administrátor nájsť.
 \begin{listing}
 \begin{minted}[mathescape,
                linenos,
@@ -261,7 +261,7 @@ foreach (DiffResultSpan drs in DiffLines)
 \label{lst:regredun}
 \end{listing}
 
-V následujúcej ukážke z balíka pre webový prehliadač Mozilla Firefox vidíme rozdiel medzi štandardným výpisom z registrov a nami upraveným výpisom v ktorom sme adresu kľúča zapísali pred každou hodnotou.
+V nasledujúcej ukážke z balíka pre webový prehliadač Mozilla Firefox vidíme rozdiel medzi štandardným výpisom z registrov a nami upraveným výpisom v ktorom sme adresu kľúča zapísali pred každou hodnotou.
 
 \begin{listing}
 \begin{minted}[mathescape,
@@ -294,25 +294,6 @@ V následujúcej ukážke z balíka pre webový prehliadač Mozilla Firefox vid�
 \end{listing}
 
 \section{Problémy pri implementácii}
-Pri implementácií sa vyskytli dva väčšie problémy, ktoré by mohli spôsobiť zlé fungovanie našej aplikácie. Prvý je zapríčinený nedostatkom informácií o udalostiach generovaných triedou FileSystemWatcher. Jedna z informácií, ktorá nám chýba je identita procesu, ktorý udalosť vyvolal. Bez tejto informácie monitorujeme a reagujeme aj na zmeny spôsobené inými procesmi počas inštalácie a môžu nastať prípady, kedy medzi súbormi označenými ako patriace k balíku sa vyskytnú súbory, ktoré  nemajú s daným balíkom nič spoločné a ocitli sa tam náhodou. Tento problém sme dočasne trochu vyriešili zavedením zakázaných slov, ktoré filtrujú najväčšie zdroje, ktoré sme pri testovaní objavili, týchto zmien ako sú napríklad dočasné súbory a cookies z prehliadača. Tento zoznam je uložený v súbore blacklist.txt nachádzajúcom sa v zložke s balíkmi.
-Druhou z väčších chýb vzniká pri generovaní rozdiel medzi registrami. Na túto úlohu používa aplikácia algoritmus nájdenia najdlhšej spoločnej sekvencie, ktorý ako výstup vráti riadky v ktorých nastala zmena. Keďže rozdiel, ktorý chceme dostať musí spĺňať štandardný Windows registry formát potrebujeme aby každá hodnota zapísaná v súbore mala hlavičku s kľúčom do ktorého patrí. Problém nastáva ak sa zmení hodnota v kľúči, ktorý už existuje. V tom momente algoritmus nájde len riadok s hodnotou ale bude mu chýbať hlavička s informáciou o kľúči ku ktorému táto hodnota patrí. Tento problém sme vyriešili pomocou zapisovanie adresy kľúča ku každej hodnote, ktorá sa v danom kľúči nachádza. Okrem týchto dvoch problémov sa počas implementácie nevyskytli problémy, ktoré by zabrali veľa času. Väčšina vznikala nedôslednosťou autora, ako pristupovanie k zložke cez triedu File alebo podobne.
-
-\section{Možné zlepšenia v budúcnosti}
-\label{sec:zlepsenia}
-\paragraph{Automatizácia procesu nahrávania súborov na server}
-Po vytvorení balíku je potrebné aby administrátor nahral daný balík a súbor packages.txt na server. Tento proces by sa dal taktiež automatizovať, avšak by vyžadoval aplikáciu na strane serveru, ktorá by požiadavky na nahranie balíku spracovávala.
-
-\paragraph{Aktualizácie}
-Pridať balíkom informáciu o ich aktuálnej verzií. Následne pri každom spustení sa skontroluje lokálna verzia balíka s verziou na serveri, v prípade nezhody by sa stiahla verzia zo serveru a nainštalovala sa. Takisto by bolo treba do administrátorského programu pridať možnosť aktualizovať určitý balík, čím by aplikácia automatický zvýšila hodnotu verzie balíku
-
-\paragraph{Odinštalovanie}
-Vytvoriť algoritmus, ktorý nájde všetky súbory a registre spojené s daným balíkom a odstráni ich, takisto upozorní používateľa o možných chybách v programoch závislých od daného balíčku.
-
-\paragraph{Sériové kódy}
-Pridať do administrátorskej aplikácie nástroje na manažovanie sériových kódov. Administrátor by vedel k balíku pridať množinu sériových kódov, ktoré by program manažoval a každej stanici, ktorá by si balík inštalovala poslal jeden kľúč z množiny nepoužitých. Týmto by sa vyriešila otázka licencií. Toto riešenie by avšak vyžadovalo zistenie umiestnenia kľúča po inštalácii a jeho zmenu podľa potreby.
-
-\paragraph{Lokalizácia}
-Zatiaľ všetky výpisy a názvy v aplikácií sú napísané v slovenčine. Do budúcnosti by sa dalo všetky napevno zadefinované reťazce prepísať do konštánt, ktoré by umožnili jednoduchú úpravu do jazyka podľa vyžiadania. V jazyku C\# na to slúžia zdroje, sú to súbory s koncovkou .resx v ktorých sú uložené konštanty ku ktorým sa dá pristupovať z ostatných častí programu. Do názvu týchto súborov sa pridáva aj skratka jazyku ku ktorému patria (sk, en, fr), pomocou ktorej program rozlišuje, ktoré reťazce sa použijú.
-
-\paragraph{Ikony programov}
-V aktuálnej verzií aplikácie, všetky nami vytvorené odkazy majú ikonu preddefinovanú systémom Windows. Jeden z problémov pri implementácii tejto vlastnosti je nájdenie cesty k pôvodnej ikone programu a odkopírovanie tejto ikony spolu s programom. 
+Pri implementácii sa vyskytli dva väčšie problémy, ktoré by mohli spôsobiť zlé fungovanie našej aplikácie. Prvý je zapríčinený nedostatkom informácií o udalostiach generovaných triedou FileSystemWatcher. Jedna z informácií, ktorá nám chýba je identita procesu, ktorý udalosť vyvolal. Bez tejto informácie monitorujeme a reagujeme aj na zmeny spôsobené inými procesmi počas inštalácie a môžu nastať prípady, kedy medzi súbormi označenými ako patriace k balíku sa vyskytnú súbory, ktoré  nemajú s daným balíkom nič spoločné a ocitli sa tam náhodou. Tento problém sme dočasne trochu vyriešili zavedením zakázaných slov, ktoré filtrujú najväčšie zdroje týchto zmien, ktoré sme pri testovaní objavili, ako sú napríklad dočasné súbory a cookies z prehliadača. Tento zoznam je uložený v súbore blacklist.txt nachádzajúcom sa v zložke s balíkmi.
+Ďalšia z väčších chýb vznikla pri generovaní rozdielu medzi registrami. Na túto úlohu používa aplikácia algoritmus nájdenia najdlhšej spoločnej sekvencie, ktorý ako výstup vráti riadky v ktorých nastala zmena. Keďže rozdiel, ktorý chceme dostať musí spĺňať štandardný formát Windows registra, potrebujeme aby každá hodnota zapísaná v súbore mala hlavičku s kľúčom do ktorého patrí. Problém nastáva ak sa zmení hodnota v kľúči, ktorý už existuje. V tom momente algoritmus nájde len riadok s hodnotou ale bude mu chýbať hlavička s informáciou o kľúči ku ktorému táto hodnota patrí. Tento problém sme vyriešili pomocou zapisovanie adresy kľúča ku každej hodnote, ktorá sa v danom kľúči nachádza. Ukážku riešenia tohto problému sme spomenuli v zdrojovom kóde \ref{lst:regredun}.
+Okrem týchto dvoch problémov sa počas implementácie nevyskytli problémy, ktoré by zabrali veľa času. Väčšina vznikala nedôslednosťou autora, ako pristupovanie k zložke cez triedu File a podobne.
