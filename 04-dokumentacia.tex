@@ -11,6 +11,7 @@ V tejto sekcii dôkladne popíšeme postup, ktorým uvedieme aplikáciu do funk�
 \item Tento súbor rozbalíme do zložky, kde chceme mať našu aplikáciu nainštalovanú
 \item S administrátorskými právami spustíme UserApp.exe a vyplníme cesty k významným priečinkom - priečinok s balíkmi, priečinok s odkazmi, adresa vzdialeného serveru
 \item Spustíme SetItUpService.exe s argumentom install, ktorý nám do systému nainštaluje potrebnú službu. Taktiež vyžaduje administrátorské práva
+\item Nainštalujeme certifikát serveru do Windows úložiska dôveryhodných certifikátov
 \item Následne spustíme Administration.exe a môžme začať monitorovať inštalácie programov
 \item Po každom vytvorenom balíku odkopírujeme súbor packages.txt a \textless názov balíku\textgreater.zip na server. Súbor packages.txt obsahuje všetky balíky, ktoré boli zapísané na serveri pri spustení aplikácie nasledované balíkmi, ktoré sme vytvorili v rámci tejto inštancie aplikácie.
 \end{enumerate}
@@ -55,27 +56,34 @@ Je to hlavný súbor v balíku, ktorý v sebe drží informácie o miestach kam 
 
 \subsection{blacklist.txt}
 Je súbor, ktorý sa nachádza lokálne v zložke s balíkmi, potrebný pri vytváraní balíkov. V ňom nájdeme zoznam slov, ktorých výskyt v ceste k súboru spôsobí, že daný súbor nebude zapísaný medzi súbory daného balíku. V momente kontroly týchto slov sa všetko zmení na malé písmena, preto aj v tomto konfiguračnom súbore je všetko zapísané malými písmenami.
-
-\subsection{Registre}
-Počas tvorby balíku aplikácia kontroluje zmeny vo Windows registroch v podstrome \textit{HKEY\textunderscore LOCAL\textunderscore MACHINE/SOFTWARE/}, všetky zmeny budú zapísané v súboroch v priečinku SetItUp_Registry uloženom v balíku. Takisto monitorujeme \textit{HKEY\textunderscore CURRENT\textunderscore USER/SOFTWARE/}, avšak s tieto registre neskôr pri inštalácií nepoužívame, sú tam pripravené pre potreby administrátora. Naša aplikácia si cesty k dôležitým priečinkom pamätá v kľúči \textit{HKEY\textunderscore LOCAL\textunderscore MACHINE/SOFTWARE/SetItUp}.
-
-\section{Spúšťanie}
-\subsection{Administrátor}
-Po nainštalovaní aplikácie spustí UserApp.exe a SetItUpService.exe aby nakonfiguroval aplikácie a pripravil službu, ktorá sa stará o aktualizáciu zoznamu balíkov a odkazov. Následne bude pomocou Administration.exe vytvárať balíky, ktoré budú neskôr prístupné používateľovi.
-
-\subsection{Používateľ}
-V ponuke Štart bude mať špeciálne odkazy na programy, pomocou ktorých sa mu daná program nainštaluje a následne spustí. Ostatok aplikácie vyžaduje administrátorské práva a preto s ním obyčajný používateľ nebude môcť narábať.
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.8\textwidth]{hlavne}
     \caption{Hlavné okno}
     \label{fig:hlavne}
 \end{figure}
+
+\subsection{Registre}
+Počas tvorby balíku aplikácia kontroluje zmeny vo Windows registroch v podstrome \textit{HKEY\textunderscore LOCAL\textunderscore MACHINE\textbackslash SOFTWARE}, všetky zmeny budú zapísané v súboroch v priečinku SetItUp\textunderscore Registry uloženom v balíku. Naša aplikácia si cesty k dôležitým priečinkom pamätá v kľúči \textit{HKEY\textunderscore LOCAL\textunderscore MACHINE\textbackslash SOFTWARE\textbackslash SetItUp}.
+% Takisto monitorujeme túto cestu v časti \textit{HKEY\textunderscore CURRENT\textunderscore USER}, avšak tieto registre neskôr pri inštalácií nepoužívame, sú tam pripravené pre potreby administrátora.
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.8\textwidth]{odkazy}
     \caption{Výber odkazov na vytvorenie}
     \label{fig:links}
+\end{figure}
+
+\section{Spúšťanie}
+\subsection{Administrátor}
+Po nainštalovaní aplikácie spustí UserApp.exe a SetItUpService.exe aby nakonfiguroval aplikácie a pripravil službu, ktorá sa stará o aktualizáciu zoznamu balíkov a odkazov. Následne bude pomocou Administration.exe vytvárať balíky, ktoré budú neskôr prístupné používateľovi.
+
+\subsection{Používateľ}
+V ponuke Štart bude mať špeciálne odkazy na programy, pomocou ktorých sa mu daná program nainštaluje a následne spustí. Ostatok aplikácie vyžaduje administrátorské práva a preto s ním obyčajný používateľ nebude môcť narábať. Počas inštalácie používateľ uvidí konzolové okno v ktorom počas inštalácie pribúdajú bodky. Pri úspešnom nainštalovaní balíku sa okno zavrie a spustí sa práve nainštalovaný program. V prípade, že počas inštalácie nastala nejaká chyba, používateľ bude o jej výskyte informovaný. Administrátor neskôr môže nájsť príčinu chyby vo Windows event logu.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{installbar}
+    \caption{Okno počas inštalácie}
+    \label{fig:installbar}
 \end{figure}
 
 \section{Správa balíkov}
@@ -87,3 +95,33 @@ Zoznam balíkov je zapísaný v súbore na serveri. Lokálne sa tento zoznam akt
 
 \subsection{Inštalácia balíku}
 Používateľ môže nainštalovať balík spustením odkazu zo zložky s odkazmi. Tento odkaz zistí, či už je daný balík nainštalovaný a podľa toho sa rozhodne o ďalšom kroku. Ak balík ešte nebol nainštalovaný, aplikácia informuje službu, ktorá nakopíruje potrebné súbory na určené miesto. V prípade, že balík bol nainštalovaný, aplikácia spustí požadovaný program.
+
+\section{Riešenie problémov}
+Mnohé časti našej aplikácie môžu skončiť chybou ak nie sú splnené všetky podmienky. V nasledovnej sekcií spomenieme niektoré z chýb, čo môžu nastať a popíšeme ako naša aplikácia informuje administrátora alebo používateľa o týchto chybách.
+
+\subsection{Administration.exe}
+Pri spustení tohto súboru sa aplikácia pokúsi o nadviazanie spojenia zo serverom, odkiaľ stiahne zoznam balíčkov. V prípade chyby ukáže dialógové okno v ktorom informuje administrátora o príčine chyby. Toto môže spôsobiť nedostupnosť servera, nedostupnosť súboru packages.txt na serveri alebo chyba pri overovaní certifikátu. Neskôr pri kopírovaní súborov do balíčku, môže nastať chyba ak daný súbor používa iný proces v počítači. V takomto prípade sa opäť ukáže dialógové okno v ktorom aplikácia informuje administrátora.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{erroradmin}
+    \caption{Chyba v Administration.exe}
+    \label{fig:adminerror}
+\end{figure}
+
+\subsection{UserApp.exe}
+V tejto časti aplikácií môže nastať chyba pri nastavovaní konfiguračných registrov, ak nie je spustená s administrátorskými právami. Neskôr pri inštalovaní jednotlivých balíkov, informuje používateľa, o chýbajúcom spustiteľnom súbore a chybách, ktoré nastali v službe počas inštalácie, výpisom do konzolového okna.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{installerror}
+    \caption{Chyba v UserApp.exe}
+    \label{fig:installerror}
+\end{figure}
+
+\subsection{SetItUpService.exe}
+Služba podrobne eviduje vykonané akcie do Windows event logu, kde k ním ma administrátor prístup. O chybách, ktoré nastali počas inštalácie balíku informuje používateľa všeobecnou správou v ktorej popíše umiestnenie podrobnejších informácií o chybe.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{errorservice}
+    \caption{Chyba v SetItUpService.exe}
+    \label{fig:serviceerror}
+\end{figure}
